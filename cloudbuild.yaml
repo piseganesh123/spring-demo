@@ -1,11 +1,4 @@
 steps:
-
-- name: 'gcr.io/concrete-crow-244606/sonar-scanner:latest'
-  args:
-    - '-Dsonar.host.url=http://34.69.3.210:9000'
-    - '-Dsonar.login=f351b9cfe7e099bc43bab297f0b2d2aa9828b243'
-    - '-Dsonar.projectKey=spring-prometheus'
-    - '-Dsonar.sources=.'
   
 - name: 'gcr.io/cloud-builders/mvn'
   args: ['clean', 'install']
