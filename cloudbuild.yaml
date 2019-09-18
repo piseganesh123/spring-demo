@@ -1,7 +1,7 @@
 steps:
   
 - name: 'gcr.io/cloud-builders/mvn'
-  args: ['clean', 'install']
+  args: ['install']
   
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/concrete-crow-244606/spring-prometheus', '.']
