@@ -99,6 +99,19 @@
                   <version>0.6.0</version>
                   
          </dependency>
+	<!-- Exposition HTTPServer-->
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_httpserver</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+         
+         <!-- https://mvnrepository.com/artifact/com.sun.net.httpserver/http -->
+		<dependency>
+		    <groupId>com.sun.net.httpserver</groupId>
+		    <artifactId>http</artifactId>
+		    <version>20070405</version>
+		</dependency>
 
 	</dependencies>
 	
