@@ -29,17 +29,16 @@ public class ProductController {
 
     private ProductService productService;
 
-    public static final Counter ProductRequestsTotal = Counter.build()
-    	     .name("requests_total").help("Total requests.").register();
+    public static Counter ProductRequestsTotal = Counter.build().namespace("java").name("my_counter").help("Total requests.").register();
         
     private static double rand(double min, double max) {
         return min + (Math.random() * (max - min));
     }
     
-    Gauge gauge = Gauge.build().namespace("java").name("my_gauge").help("This is my gauge").register();
-    Histogram histogram = Histogram.build().namespace("java").name("my_histogram").help("This is my histogram").register();
-    Summary summary = Summary.build().namespace("java").name("my_summary").help("This is my summary").register();
-    Histogram requestHistogram = Histogram.build().namespace("java").name("request").help("Requets histogram").labelNames("statusCode").register();
+    public static Gauge gauge = Gauge.build().namespace("java").name("my_gauge").help("This is my gauge").register();
+    public static Histogram histogram = Histogram.build().namespace("java").name("my_histogram").help("This is my histogram").register();
+    public static Summary summary = Summary.build().namespace("java").name("my_summary").help("This is my summary").register();
+    public static Histogram requestHistogram = Histogram.build().namespace("java").name("request").help("Requets histogram").labelNames("statusCode").register();
         
     @Autowired
     public void setProductService(ProductService productService) {
@@ -61,7 +60,7 @@ public class ProductController {
             HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", 80), 1000);
 
 
-            server.createContext("/", httpExchange -> {
+            server.createContext("/product-metric", httpExchange -> {
                 Date start = new Date();
                 int statusCode = 200;
 
