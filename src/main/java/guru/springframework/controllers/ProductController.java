@@ -7,7 +7,7 @@ import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.Summary;
-import io.prometheus.client.exporter.HTTPServer;
+//import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.exporter.common.TextFormat;
 
 import java.io.IOException;
@@ -29,12 +29,11 @@ public class ProductController {
 
     private ProductService productService;
 
-    public static Counter ProductRequestsTotal = Counter.build().namespace("java").name("my_counter").help("Total requests.").register();
-        
     private static double rand(double min, double max) {
         return min + (Math.random() * (max - min));
     }
     
+    public static Counter ProductRequestsTotal = Counter.build().namespace("java").name("my_counter").help("Total requests.").register();    
     public static Gauge gauge = Gauge.build().namespace("java").name("my_gauge").help("This is my gauge").register();
     public static Histogram histogram = Histogram.build().namespace("java").name("my_histogram").help("This is my histogram").register();
     public static Summary summary = Summary.build().namespace("java").name("my_summary").help("This is my summary").register();
@@ -48,58 +47,26 @@ public class ProductController {
     @RequestMapping(value = "/products", method = RequestMethod.GET)
     public String list(Model model){
     	//ProductRequestsTotal.inc();
-    	try {
-            new HTTPServer("0.0.0.0", 8080, true);
-        } catch (IOException e) {
-            e.printStackTrace();
+    	 int statusCode = 200;
+    	 Date start = new Date();
+         long elapsedTime = (new Date()).getTime() - start.getTime();
+    	try {       
+	            model.addAttribute("products", productService.listAllProducts());
+	            System.out.println("Returning rpoducts:");
+	            
+            } catch (Exception e) {
+        	   statusCode=500;
+        	   e.printStackTrace();
         }
-
-
-        try {
-        	
-            HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", 80), 1000);
-
-
-            server.createContext("/product-metric", httpExchange -> {
-                Date start = new Date();
-                int statusCode = 200;
-
-                if (!"GET".equalsIgnoreCase(httpExchange.getRequestMethod())) {
-                    statusCode = 400;
-                }
-
-                httpExchange.sendResponseHeaders(statusCode, 0);
-                httpExchange.getResponseBody().close();
-                httpExchange.close();
-
-                long elapsedTime = (new Date()).getTime() - start.getTime();
-                requestHistogram.labels(String.valueOf(statusCode)).observe(elapsedTime);
-            });
-
-            Thread bgThread = new Thread(() -> {
-                while (true) {
-                    try {
-                    	ProductRequestsTotal.inc(rand(0, 5));
-                        gauge.set(rand(-5, 10));
-                        histogram.observe(rand(0, 5));
-                        summary.observe(rand(0, 5));
-
-
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            bgThread.start();
-
-            server.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        model.addAttribute("products", productService.listAllProducts());
-        System.out.println("Returning rpoducts:");
+    	finally {
+    		requestHistogram.labels(String.valueOf(statusCode)).observe(elapsedTime);
+    		ProductRequestsTotal.inc();
+            gauge.set(rand(-5, 10));
+            histogram.observe(rand(0, 5));
+            summary.observe(rand(0, 5));
+    		
+    	}
+       
         return "products";
     }
 
