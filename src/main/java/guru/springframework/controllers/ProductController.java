@@ -33,6 +33,7 @@ public class ProductController {
         return min + (Math.random() * (max - min));
     }
     
+    public static double number = 1;
     public static Counter ProductRequestsTotal = Counter.build().namespace("java").name("my_counter").help("Total requests.").register();    
     public static Gauge gauge = Gauge.build().namespace("java").name("my_gauge").help("This is my gauge").register();
     public static Histogram histogram = Histogram.build().namespace("java").name("my_histogram").help("This is my histogram").register();
@@ -48,6 +49,9 @@ public class ProductController {
     public String list(Model model){
     	//ProductRequestsTotal.inc();
     	 int statusCode = 200;
+    	 if(number%3==0) {
+    		statusCode = 500;
+    	 }
     	 Date start = new Date();
          long elapsedTime = (new Date()).getTime() - start.getTime();
     	try {       
@@ -64,7 +68,7 @@ public class ProductController {
             gauge.set(rand(-5, 10));
             histogram.observe(rand(0, 5));
             summary.observe(rand(0, 5));
-    		
+            number++;
     	}
        
         return "products";
