@@ -117,4 +117,4 @@ jobs:
     - name: deploy on local kubernetes cluster
       id: deploy-helm-chart-on-EKS
       run: |
-        helm upgrade --install spring-demo-chart oci://053243953253.dkr.ecr.ap-south-1.amazonaws.com/spring-demo-app --version=${{ needs.build-package.outputs.APP_VERSION }}
+        helm upgrade --install spring-demo-chart oci://053243953253.dkr.ecr.ap-south-1.amazonaws.com/spring-demo-app --version=${{ needs.build.outputs.APP_VERSION }}
