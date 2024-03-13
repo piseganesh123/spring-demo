@@ -6,4 +6,4 @@ This repository has the project files for a tutorial series on Spring Boot avail
 
 replace docker image tag with appropriate version and install application using below helm command 
 
-helm upgrade --install my-sprint-demo ./spring-demo-app/ --version 2024.3.12-103624
+helm upgrade --install spring-demo ./spring-demo-app/ --version <2024.3.12-103624>
