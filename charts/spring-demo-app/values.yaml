@@ -8,7 +8,7 @@ image:
   repository: piseganesh123/spring-demo
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2024.3.12-103624"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
