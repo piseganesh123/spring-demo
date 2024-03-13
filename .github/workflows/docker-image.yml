@@ -82,7 +82,7 @@ jobs:
         helm push spring-demo-app-${{ steps.generate_version.outputs.OUT_APP_VERSION }}.tgz oci://053243953253.dkr.ecr.ap-south-1.amazonaws.com
 
   release-on-SIT:
-    runs-on: self-hosted-runner
+    runs-on: self-hosted
     needs: build
 
     steps:
