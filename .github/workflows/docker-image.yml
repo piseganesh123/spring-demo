@@ -54,5 +54,30 @@ jobs:
         tags: piseganesh123/spring-demo:${{ steps.generate_version.outputs.OUT_APP_VERSION }}
         labels: ${{ steps.meta.outputs.labels }}
         
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Configure AWS ECR credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: 'ap-south-1'
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Install Helm
+      id: install-helm
+      uses: azure/setup-helm@v1
+      with:
+        version: v3.14.2
+
+    - name: helm package
+      id: package-chart
+      run: |
+        helm package charts/spring-demo-app --app-version=${{ steps.generate_version.outputs.OUT_APP_VERSION }} --version=${{ steps.generate_version.outputs.OUT_APP_VERSION }}
+
+    - name: helm Push
+      id: push-chart    
+      run: |
+        ls && helm push mychart-${{ steps.generate_version.outputs.OUT_APP_VERSION }}.tgz oci://053243953253.dkr.ecr.ap-south-1.amazonaws.com
+    
